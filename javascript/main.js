@@ -1,0 +1,53 @@
+// @ts-check
+
+import VariableListComponent from "./components/variable_list_component.js";
+
+const classNameInput = /** @type {HTMLInputElement} */ (document.querySelector("#class_name_input"));
+const useES6Toggle = /** @type {HTMLInputElement} */ (document.querySelector("#use_es6_toggle"));
+const generateButton = /** @type {HTMLButtonElement} */ (document.querySelector("#generate_button"));
+const variableListComponent = new VariableListComponent("#variables_container");
+
+const outputTextArea = /** @type {HTMLTextAreaElement} */ (document.querySelector("#model_output_textarea"));
+const copyModelButton = /** @type {HTMLButtonElement} */ (document.querySelector("#copy_model_button"));
+
+generateButton.onclick = () => {
+  const className = classNameInput.value;
+  const isUsingES6 = useES6Toggle.checked;
+  outputTextArea.innerHTML = `// @ts-check
+
+${isUsingES6 ? `export ` : ""}class ${className} {
+  /**
+  * @param {{
+${variableListComponent.getVariables().map(e => e.getJSDOCHeader()).join("\n")}
+  * }} params
+  */
+  constructor({
+${variableListComponent.getVariables().map(e => e.getName()).join("\n")}
+  }) {
+${variableListComponent.getVariables().map(e => e.getConstructor()).join("\n")}
+  }
+
+  /** 
+  * @param {Object} dict
+  * @returns {${className}}
+  */
+  static fromRemote(dict) {
+    return new ${className}({
+${variableListComponent.getVariables().map(e => e.getFromRemote()).join("\n")}
+    });
+  }
+
+  /** @returns {Object} */
+  toJSON() {
+    return {
+${variableListComponent.getVariables().map(e => e.getToJSON()).join("\n")}
+    };
+  }
+}
+
+${!isUsingES6 ? `module.exports = { ${className} };` : ""}`;
+}
+
+copyModelButton.onclick = () => {
+  navigator.clipboard.writeText(outputTextArea.value);
+}
