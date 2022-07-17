@@ -17,6 +17,7 @@ class DeclaredVariable {
     this.jsonName = jsonName;
   }
 
+  /** @returns {string} */
   getJSDOCHeader() {
     return `  *  ${this.name}: ${this.varType},`;
   }
@@ -41,7 +42,8 @@ class DeclaredVariable {
       return `      ${this.name}: dict.${this.databaseName}.map(e => ${this.varType.slice(0, -2)}.fromRemote(e)),`;
     }
   }
-
+  
+  /** @returns {string} */
   getToJSON() {
     if (this.isTypeAcceptedByJSON()) {
       return `      ${this.jsonName}: this.${this.name},`;

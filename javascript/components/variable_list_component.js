@@ -4,9 +4,10 @@ import DeclaredVariable from "../models/declared_variable.js";
 
 class VariableListComponent {
 
+  /** @param {string} elemSelect */
   constructor(elemSelect) {
-    /** @private @type {Element} */
     this.elem = document.querySelector(elemSelect);
+    if (!this.elem) throw new Error("No element found");
 
     this.elem.innerHTML = `
       <button class="var-add-btn">Add Var</button>
