@@ -64,6 +64,11 @@ class DeclaredVariable {
   isArray() {
     return this.varType.endsWith("[]");
   }
+
+  /** @returns {boolean} */
+  isValid() {
+    return Boolean(this.name && this.varType && this.databaseName && this.jsonName);
+  }
 }
 
 export default DeclaredVariable;

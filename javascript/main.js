@@ -1,5 +1,6 @@
 // @ts-check
 
+import CommonModal from "./components/common_modal.js";
 import VariableListComponent from "./components/variable_list_component.js";
 
 const classNameInput = /** @type {HTMLInputElement} */ (document.querySelector("#class_name_input"));
@@ -13,6 +14,15 @@ const copyModelButton = /** @type {HTMLButtonElement} */ (document.querySelector
 generateButton.onclick = () => {
   const className = classNameInput.value;
   const isUsingES6 = useES6Toggle.checked;
+
+  if (!className) {
+    CommonModal.showModal({ title: "Error", message: "No class name provided.", });
+    return;
+  } else if (variableListComponent.getVariables().length <= 0) {
+    CommonModal.showModal({ title: "Error", message: "Invalid variables.", });
+    return;
+  }
+
   outputTextArea.innerHTML = `// @ts-check
 
 ${isUsingES6 ? `export ` : ""}class ${className} {
@@ -50,4 +60,8 @@ ${!isUsingES6 ? `module.exports = { ${className} };` : ""}`;
 
 copyModelButton.onclick = () => {
   navigator.clipboard.writeText(outputTextArea.value);
+  CommonModal.showModal({
+    title: "Success!",
+    message: "Model copied successfully."
+  });
 }

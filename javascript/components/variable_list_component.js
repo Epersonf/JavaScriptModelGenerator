@@ -41,12 +41,14 @@ class VariableListComponent {
    */
   getVariables() {
     if (!this.cardsContainer) return [];
-    return Array.from(this.cardsContainer?.children).map(e => new DeclaredVariable({
+    const declaredVariables = Array.from(this.cardsContainer?.children).map(e => new DeclaredVariable({
       name: /** @type {HTMLInputElement} */ (e.querySelector(".variable-name")).value,
       varType: /** @type {HTMLInputElement} */ (e.querySelector(".variable-type")).value,
       databaseName: /** @type {HTMLInputElement} */ (e.querySelector(".variable-db-name")).value,
       jsonName: /** @type {HTMLInputElement} */ (e.querySelector(".variable-json-name")).value,
     }));
+    if (declaredVariables.some(e => !e.isValid())) return [];
+    return declaredVariables;
   }
 
 }
